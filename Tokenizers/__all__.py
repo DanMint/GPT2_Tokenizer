@@ -1,7 +1,7 @@
 from .base import BaseTokenizer
-from .bpe import BPE
-from .tiktoken_wrapper import TikTokenTokenizer
-from .huggingface_wrapper import HuggingFaceTokenizer
+from .BPE import BPE
+from .Tiktoken import TikTokenTokenizer
+from .huggingFaceTokenizer import HuggingFaceTokenizer
 
 __all__ = [
     "BaseTokenizer",

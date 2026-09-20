@@ -6,7 +6,7 @@ class BPE:
         self._vocabulary = {}
         self._BPE_tokens = self._original_tokens
 
-    def get_stats(self, ids: list) -> dict:
+    def _get_stats(self, ids: list) -> dict:
         counts = {}
 
         for token_index in range(len(ids) - 1):
@@ -15,7 +15,7 @@ class BPE:
             
         return counts
 
-    def merge(self, previous_tokens, pair, idx):
+    def _merge(self, previous_tokens, pair, idx):
         new_tokens = []
         skip = False
         for token_index in range(len(previous_tokens)):
@@ -39,10 +39,10 @@ class BPE:
         num_merges = vocab_size - 256
 
         for i in range(num_merges):
-            stats = self.get_stats(self._BPE_tokens)
+            stats = self._get_stats(self._BPE_tokens)
             pair = max(stats, key=stats.get)
             idx = 256 + i
-            self._BPE_tokens = self.merge(self._BPE_tokens, pair, idx)
+            self._BPE_tokens = self._merge(self._BPE_tokens, pair, idx)
             self._merges[pair] = idx
 
         # building out the vocabulary 
@@ -54,12 +54,12 @@ class BPE:
         tokens = list(text.encode("utf-8"))
 
         while len(tokens) >= 2:
-            stats = self.get_stats(tokens)
+            stats = self._get_stats(tokens)
             pair = min(stats, key=lambda p: self._merges.get(p, float("inf")))
             if pair not in self._merges:
                 break
             idx = self._merges[pair]
-            tokens = self.merge(tokens, pair, idx)
+            tokens = self._merge(tokens, pair, idx)
 
         return tokens
 
@@ -120,7 +120,7 @@ def main():
     print(Test1.legth_of_text)
     print(Test1.legth_of_original_tokens)
 
-    print(Test1.get_stats(Test1.original_tokens))
+    print(Test1._get_stats(Test1.original_tokens))
     Test1.train(300)
     # print(Test1.BPE_tokens)
     print(Test1.BPE_tokens_length)
